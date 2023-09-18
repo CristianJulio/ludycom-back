@@ -1,4 +1,4 @@
-const {User} = require("../database/models");
+const { User } = require("../database/models");
 
 const getAllusers = async () => {
   try {
@@ -14,7 +14,10 @@ const getOneuser = async (document_number) => {
     const user = await User.findOne({ where: { document_number } });
 
     if (!user) {
-      throw { status: 404, message: `user with Doc. number ${document_number} not found` };
+      throw {
+        status: 404,
+        message: `user with Doc. number ${document_number} not found`,
+      };
     }
 
     return user;
@@ -33,29 +36,23 @@ const createNewuser = async (userBody) => {
   }
 };
 
-const updateOneuser = async (userBody, userId) => {    
+const updateOneUser = async (userBody, document_number) => {
   try {
     // I check if the user exists
-    await getOneuser(userId)
+    await getOneuser(document_number);
 
-    const updatedUser = await User.update(userBody, {where: { id: userId }})
-    
-    return updatedUser
+    await User.update(userBody, { where: { document_number } });
   } catch (error) {
     throw { status: 500, message: error?.message || error };
   }
 };
 
-const deleteOneuser = async (userId) => {
+const deleteOneuser = async (document_number) => {
   try {
     // I check if the user exists
-    await getOneuser(userId)
-    
-    await User.destroy({
-      where: {
-        id: userId,
-      },
-    });
+    await getOneuser(document_number);
+
+    await User.destroy({ where: { document_number } });
   } catch (error) {
     throw { status: 500, message: error?.message || error };
   }
@@ -66,6 +63,6 @@ module.exports = {
   getAllusers,
   getOneuser,
   createNewuser,
-  updateOneuser,
+  updateOneUser,
   deleteOneuser,
 };

@@ -30,7 +30,7 @@ const createNewArea = async (req, res) => {
         .status(400)
         .json({ status: "FAILED", message: { error: errors.array() } });
     }
-    
+
     const createdArea = await areasService.createNewArea(req.body, 1234567);
     res.json({ status: "OK", data: createdArea });
   } catch (error) {
@@ -45,19 +45,19 @@ const updateOneArea = async (req, res) => {
 
   const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      return res
-        .status(400)
-        .json({ status: "FAILED", message: { error: errors.array() } });
-    }
-  
+  if (!errors.isEmpty()) {
+    return res
+      .status(400)
+      .json({ status: "FAILED", message: { error: errors.array() } });
+  }
+
   try {
-    const updatedArea = await areasService.updateOneArea(req.body, areaCode)
-    res.json({status: 'OK', data: updatedArea})
+    await areasService.updateOneArea(req.body, areaCode)
+    res.json({ status: 'OK', data: `Area with code ${areaCode} updated` })
   } catch (error) {
     res
-    .status(500)
-    .json({ status: "FAILED", data: { error: error?.message || error } });
+      .status(500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 }
 

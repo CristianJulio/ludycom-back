@@ -1,5 +1,4 @@
 const { Area, User } = require("../database/models");
-const usersService = require("./usersService");
 
 const getAllAreas = async () => {
   try {
@@ -12,15 +11,15 @@ const getAllAreas = async () => {
   }
 };
 
-const getOneArea = async (code) => {
+const getOneArea = async (areaCode) => {
   try {
     const area = await Area.findOne({
-      where: { code },
+      where: { code: areaCode },
       include: { model: User, attributes: ["first_name"] },
     });
 
     if (!area) {
-      throw { message: `Area with code ${code} not found` };
+      throw { status: 404, message: `Area with code ${areaCode} not found` };
     }
 
     return area;
@@ -29,14 +28,8 @@ const getOneArea = async (code) => {
   }
 };
 
-const createNewArea = async (areaBody, userDocNumber) => {
+const createNewArea = async (areaBody) => {
   try {
-    const user = await usersService.getOneuser(userDocNumber);
-
-    if (!user) {
-      throw { message: `User with Doc number ${userDocNumber} not found` };
-    }
-
     const buildedArea = Area.build(areaBody);
     const savedArea = await buildedArea.save();
     return savedArea;
@@ -50,10 +43,7 @@ const updateOneArea = async (areaBody, areaCode) => {
     // I check if the area exists
     await getOneArea(areaCode);
 
-    const updatedArea = await Area.update(areaBody, {
-      where: { code: areaCode },
-    });
-    return updatedArea;
+    await Area.update(areaBody, { where: { code: areaCode } });
   } catch (error) {
     throw { status: 500, message: error?.message || error };
   }

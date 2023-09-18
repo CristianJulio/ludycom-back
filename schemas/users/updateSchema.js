@@ -11,7 +11,7 @@ const isValidDateFormat = (value) => {
   return dateFormat.test(value);
 };
 
-const updateUserValidationSchema = [
+const updateValidationSchema = [
   body("first_name")
     .isString()
     .withMessage("First name must be a string")
@@ -42,7 +42,7 @@ const updateUserValidationSchema = [
     }
     return true;
   })
-  .optional(),
+    .optional(),
   body("email")
     .isEmail()
     .withMessage("Email must be a valid email")
@@ -55,7 +55,7 @@ const updateUserValidationSchema = [
     }
     return true;
   })
-  .optional(),
+    .optional(),
   body("salary")
     .isDecimal()
     .withMessage("First name must be a string")
@@ -64,4 +64,4 @@ const updateUserValidationSchema = [
     .optional()
 ];
 
-module.exports = updateUserValidationSchema;
+module.exports = updateValidationSchema;

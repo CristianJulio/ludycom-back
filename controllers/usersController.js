@@ -1,4 +1,4 @@
-const { validationResult, body } = require("express-validator");
+const { validationResult } = require("express-validator");
 const usersService = require("../services/usersService");
 
 const getAllUsers = async (req, res) => {
@@ -6,18 +6,18 @@ const getAllUsers = async (req, res) => {
     const allUsers = await usersService.getAllusers();
     res.json({ status: "OK", data: allUsers });
   } catch (error) {
-    res.json({ status: "FAILED", data: { error: error?.message || error } });
+    res.status(500).json({ status: "FAILED", data: { error: error?.message || error } });
   }
 };
 
 const getOneUser = async (req, res) => {
-  const userid = req.params["userId"];
+  const document_number = req.params["document_number"];
 
   try {
-    const user = await usersService.getOneuser(userid);
+    const user = await usersService.getOneuser(document_number);
     res.json({ status: "OK", data: user });
   } catch (error) {
-    res.json({ status: "FAILED", data: { error: error?.message || error } });
+    res.status(500).json({ status: "FAILED", data: { error: error?.message || error } });
   }
 };
 
@@ -36,11 +36,13 @@ const createNewUser = async (req, res) => {
     const createduser = await usersService.createNewuser(userBody);
     res.json({ status: "OK", data: createduser });
   } catch (error) {
-    res.json({ status: "FAILED", message: { error: error?.message || error } });
+    res.status(500).json({ status: "FAILED", data: { error: error?.message || error } });
   }
 };
 
 const updateOneUser = async (req, res) => {
+  const document_number = req.params["document_number"];
+
   try {
     const errors = validationResult(req);
 
@@ -50,27 +52,24 @@ const updateOneUser = async (req, res) => {
         .json({ status: "FAILED", message: { error: errors.array() } });
     }
 
-    const updateduser = await usersService.updateOneuser(
-      req.body,
-      req.params["userId"]
-    );
-    res.json({ status: "OK", data: updateduser });
+    await usersService.updateOneUser(req.body, document_number);
+    res.json({ status: "OK", data: `User with Doc. number ${document_number} updated` });
   } catch (error) {
-    res.json({ status: "FAILED", message: { error: error?.message || error } });
+    res.status(500).json({ status: "FAILED", data: { error: error?.message || error } });
   }
 };
 
 const deleteOneUser = async (req, res) => {
-  const userId = req.params["userId"];
+  const document_number = req.params["document_number"];
 
   try {
-    await usersService.deleteOneuser(userId);
+    await usersService.deleteOneuser(document_number);
     res.json({
       status: "OK",
-      data: { message: `User with id ${userId} deleted` },
+      data: { message: `User with id ${document_number} deleted` },
     });
   } catch (error) {
-    res.json({ status: "FAILED", message: { error: error?.message || error } });
+    res.status(500).json({ status: "FAILED", data: { error: error?.message || error } });
   }
 };
 
