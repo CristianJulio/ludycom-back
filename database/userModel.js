@@ -10,6 +10,14 @@ const User = sequelize.define('user', {
     type: DataTypes.STRING(50),
     allowNull: true
   },
+  last_name: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
+  second_last_name: {
+    type: DataTypes.STRING(50),
+    allowNull: false
+  },
   date_of_birth: {
     type: DataTypes.DATE
   },
