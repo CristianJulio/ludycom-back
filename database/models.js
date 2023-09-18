@@ -1,8 +1,33 @@
 const { DataTypes, Model } = require("sequelize");
 const sequelize = require("./db"); // Your Sequelize instance
-const Area = require("./areaModel"); // Import the User model
 
-console.log("Area", Area.toString())
+class Area extends Model {}
+
+Area.init(
+  {
+    code: {
+      type: DataTypes.INTEGER(2),
+      primaryKey: true,
+    },
+    name: {
+      type: DataTypes.STRING(50),
+      allowNull: true,
+    },
+    lider: {
+      type: DataTypes.INTEGER(7),
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.BOOLEAN(),
+      allowNull: false,
+      defaultValue: true,
+    },
+  },
+  {
+    sequelize,
+    modelName: "area",
+  }
+);
 
 class User extends Model {}
 
@@ -26,24 +51,24 @@ User.init(
     },
     date_of_birth: {
       type: DataTypes.DATE,
-      allowNull: false
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: false,
     },
     document_number: {
       type: DataTypes.INTEGER(7),
       primaryKey: true,
     },
     salary: {
-      type: DataTypes.DECIMAL(10, 2)
+      type: DataTypes.DECIMAL(10, 2),
     },
     status: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: true
-    }
+      defaultValue: true,
+    },
   },
   {
     sequelize,
@@ -51,9 +76,14 @@ User.init(
   }
 );
 
-// (async () => { await sequelize.sync({ force: true }); })();
+Area.belongsTo(User, { foreignKey: "lider" });
+User.hasMany(Area, { foreignKey: 'lider', as: "areas" });
 
-User.hasMany(Area, { as: 'areas' });
+(async () => {
+  await sequelize.sync({ force: true });
+})();
 
-
-module.exports = User;
+module.exports = {
+  User,
+  Area,
+};

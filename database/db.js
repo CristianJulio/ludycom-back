@@ -5,6 +5,17 @@ const sequelize = new Sequelize('ludycom', 'root', 'root', {
   dialect: 'mysql'
 });
 
+// const initialize = async () => {
+//   try {
+//     await sequelize.sync({ force: true }) // Use { force: true } to drop existing tables on every sync
+//     console.log('Database and tables synced.');
+//   } catch (error) {
+//     console.error('Error syncing database:', error); 
+//   }
+// }
+
+// initialize();
+
 // Test the connection
 sequelize.authenticate()
   .then(() => {
@@ -15,17 +26,3 @@ sequelize.authenticate()
   });
 
 module.exports = sequelize
-
-// const mysql = require('mysql2/promise');
-// const { Sequelize } = require("sequelize");
-
-// const DBNAME = process.env.DBNAME
-
-// module.exports = db = {};
-
-// initialize();
-
-// async function initialize() {
-//   const connection = await mysql.createConnection({ host: "localhost", port: '3306', user: "root", password: "root" });
-//   await connection.query(`CREATE DATABASE IF NOT EXISTS \`${DBNAME}\`;`);
-// }

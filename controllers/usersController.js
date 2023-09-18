@@ -1,3 +1,4 @@
+const { validationResult, body } = require("express-validator");
 const usersService = require("../services/usersService");
 
 const getAllUsers = async (req, res) => {
@@ -23,28 +24,54 @@ const getOneUser = async (req, res) => {
 const createNewUser = async (req, res) => {
   const userBody = req.body;
 
-  //   console.log(userBody);
-
-  //   res.json(userBody)
-
-  //   return;
-
   try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res
+        .status(400)
+        .json({ status: "FAILED", message: { error: errors.array() } });
+    }
+
     const createduser = await usersService.createNewuser(userBody);
     res.json({ status: "OK", data: createduser });
   } catch (error) {
-    res.json({ status: "FAILED", data: { error: error?.message || error } });
+    res.json({ status: "FAILED", message: { error: error?.message || error } });
   }
 };
 
-const updateOneUser = (req, res) => {
-  const updatedUser = usersService.updateOneuser();
-  res.send("Update an existing User");
+const updateOneUser = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res
+        .status(400)
+        .json({ status: "FAILED", message: { error: errors.array() } });
+    }
+
+    const updateduser = await usersService.updateOneuser(
+      req.body,
+      req.params["userId"]
+    );
+    res.json({ status: "OK", data: updateduser });
+  } catch (error) {
+    res.json({ status: "FAILED", message: { error: error?.message || error } });
+  }
 };
 
-const deleteOneUser = (req, res) => {
-  const deletedUser = usersService.deleteOneuser();
-  res.send("Delete an existing User");
+const deleteOneUser = async (req, res) => {
+  const userId = req.params["userId"];
+
+  try {
+    await usersService.deleteOneuser(userId);
+    res.json({
+      status: "OK",
+      data: { message: `User with id ${userId} deleted` },
+    });
+  } catch (error) {
+    res.json({ status: "FAILED", message: { error: error?.message || error } });
+  }
 };
 
 module.exports = {

@@ -1,5 +1,7 @@
 const express = require("express");
-const usersController = require("../../../controllers/usersController")
+const usersController = require("../../../controllers/usersController");
+const createValidationSchema = require("../../../schemas/users/createSchema");
+const updateUserValidationSchema = require("../../../schemas/users/updateSchema");
 
 const router = express.Router();
 
@@ -7,9 +9,9 @@ router.get("/", usersController.getAllUsers);
   
   router.get("/:userId", usersController.getOneUser);
   
-  router.post("/", usersController.createNewUser);
+  router.post("/", createValidationSchema, usersController.createNewUser);
   
-  router.put("/:userId", usersController.updateOneUser);
+  router.put("/:userId", updateUserValidationSchema, usersController.updateOneUser);
   
   router.delete("/:userId", usersController.deleteOneUser);
 
