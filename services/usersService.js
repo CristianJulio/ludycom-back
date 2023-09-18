@@ -1,5 +1,7 @@
-const getAllusers = () => {
-    return;
+const User = require("../database/userModel")
+
+const getAllusers = async () => {
+    return await User.findAll();
   };
   
   const getOneuser = () => {

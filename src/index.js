@@ -1,5 +1,7 @@
+require("dotenv").config()
 const express = require('express')
 const v1usersRouter = require('./v1/routes/usersRoutes')
+require("../database/db")
 
 const app = express()
 const PORT = process.env.PORT || 3000
