@@ -77,10 +77,22 @@ const deleteOneArea = async (req, res) => {
   }
 };
 
+const getCount = async (req, res) => {
+  try {
+    const count = await areasService.getCount()
+    res.json({ status: 'OK', data: count })
+  } catch (error) {
+    res
+      .status(500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+}
+
 module.exports = {
   getAllAreas,
   getOneArea,
   createNewArea,
   updateOneArea,
   deleteOneArea,
+  getCount
 };

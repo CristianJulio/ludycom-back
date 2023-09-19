@@ -7,6 +7,8 @@ const router = express.Router();
 
 router.get("/", areasContoller.getAllAreas);
 
+router.get("/count", areasContoller.getCount)
+
 router.get("/:areaCode", areasContoller.getOneArea);
 
 router.post("/", createValidationSchema, areasContoller.createNewArea);

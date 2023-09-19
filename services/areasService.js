@@ -64,10 +64,23 @@ const deleteOneArea = async (areaCode) => {
   }
 };
 
+const getCount = async () => {
+  try {
+    const active = await Area.count({ where: { status: true } })
+    const inActive = await Area.count({ where: { status: false } })
+
+    return { active, inActive }
+
+  } catch (error) {
+    throw { status: 500, message: error?.message || error };
+  }
+}
+
 module.exports = {
   getAllAreas,
   getOneArea,
   createNewArea,
   updateOneArea,
   deleteOneArea,
+  getCount
 };

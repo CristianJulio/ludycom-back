@@ -56,8 +56,17 @@ const deleteOneuser = async (document_number) => {
   } catch (error) {
     throw { status: 500, message: error?.message || error };
   }
-  return;
 };
+
+const getCount = async () => {
+  try {
+    const active = await User.count({ where: { status: true } })
+    const inActive = await User.count({ where: { status: false } })
+    return { active, inActive }
+  } catch (error) {
+    throw { status: 500, message: error?.message || error };
+  }
+}
 
 module.exports = {
   getAllusers,
@@ -65,4 +74,5 @@ module.exports = {
   createNewuser,
   updateOneUser,
   deleteOneuser,
+  getCount
 };
